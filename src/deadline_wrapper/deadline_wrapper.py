@@ -162,6 +162,8 @@ def install_rcs(
 
     installer = installers_dir / f"DeadlineClient-${deadline_version}-linux-x64-installer.run"
 
+    print(installer)
+
     assert installer.exists()
     assert 8000 <= httpport <= 65535
     assert deadline_version in [
