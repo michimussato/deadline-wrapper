@@ -380,7 +380,7 @@ def main(args):
     args = parse_args(args)
     setup_logging(args.loglevel)
 
-    if args.sub_command == "install_rcs":
+    if args.sub_command == "install-rcs":
         install_rcs(
             deadline_version=args.deadline_version,
             prefix=args.prefix,
@@ -389,7 +389,7 @@ def main(args):
             force_reinstall=args.force_reinstall,
         )
 
-    elif args.sub_command == "install_webservice":
+    elif args.sub_command == "install-webservice":
         install_webservice(
             deadline_version=args.deadline_version,
             prefix=args.prefix,
