@@ -389,7 +389,7 @@ def main(args):
             force_reinstall=args.force_reinstall,
         )
 
-    if args.sub_command == "install_webservice":
+    elif args.sub_command == "install_webservice":
         install_webservice(
             deadline_version=args.deadline_version,
             prefix=args.prefix,
