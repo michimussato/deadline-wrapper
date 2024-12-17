@@ -75,12 +75,21 @@ fi;
 """
 
 
-def install_rcs(
+def install_webservice(
         deadline_version: str,
-        prefix: pathlib.Path = pathlib.Path("/opt/Thinkbox/Deadline10"),
-        repositorydir: pathlib.Path = pathlib.Path("/opt/Thinkbox/DeadlineRepository10"),
-        httpport: int = 8888,
+        prefix: pathlib.Path,
+        repositorydir: pathlib.Path,
+        webservice_httpport: int,
 ):
+
+    installer = pathlib.Path(f"/deadline_installers/DeadlineClient-${deadline_version}-linux-x64-installer.run")
+
+    assert installer.exists()
+    assert 8000 <= webservice_httpport <= 65535
+    assert deadline_version in [
+        "10.2.1.1",
+        "10.4.0.10",
+    ]
 
     installer_log = pathlib.Path("/tmp/installbuilder_installer.log")
 
@@ -88,7 +97,62 @@ def install_rcs(
         shutil.rmtree(installer_log, ignore_errors=True)
 
     cmd = list()
-    cmd.append(f"/deadline_installers/DeadlineClient-${deadline_version}-linux-x64-installer.run")
+
+    cmd.append(installer)
+    cmd.extend(["--mode", "unattended"])
+    cmd.extend(["--prefix", prefix])
+    cmd.extend(["--repositorydir", repositorydir])
+    cmd.extend(["--launcherdaemon", "false"])
+    cmd.extend(["--enable-components", "webservice_config"])
+    cmd.extend(["--blockautoupdateoverride", "NotBlocked"])
+    cmd.extend(["--webserviceuser", "root"])
+    cmd.extend(["--webservice_httpport", webservice_httpport])
+    cmd.extend(["--webservice_enabletls", "false"])
+
+    proc = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        cwd=prefix,
+    )
+
+    stdout, stderr = proc.communicate()
+
+    _logger.info(stdout)
+    _logger.error(stderr)
+
+    shutil.move(installer_log, prefix)
+
+    with open(prefix / "installbuilder_installer.log", "r") as fo:
+        _logger.info(fo.read())
+
+    return installer_log
+
+
+def install_rcs(
+        deadline_version: str,
+        prefix: pathlib.Path,
+        repositorydir: pathlib.Path,
+        httpport: int,
+):
+
+    installer = pathlib.Path(f"/deadline_installers/DeadlineClient-${deadline_version}-linux-x64-installer.run")
+
+    assert installer.exists()
+    assert 8000 <= httpport <= 65535
+    assert deadline_version in [
+        "10.2.1.1",
+        "10.4.0.10",
+    ]
+
+    installer_log = pathlib.Path("/tmp/installbuilder_installer.log")
+
+    if installer_log.exists():
+        shutil.rmtree(installer_log, ignore_errors=True)
+
+    cmd = list()
+
+    cmd.append(installer)
     cmd.extend(["--mode", "unattended"])
     cmd.extend(["--prefix", prefix])
     cmd.extend(["--repositorydir", repositorydir])
@@ -134,13 +198,13 @@ def parse_args(args):
     Returns:
       :obj:`argparse.Namespace`: command line parameters namespace
     """
-    parser = argparse.ArgumentParser(description="Just a Fibonacci demonstration")
+    parser = argparse.ArgumentParser(description="An AWS/Thinkbox Deadline Wrapper.")
+
     parser.add_argument(
         "--version",
         action="version",
         version=f"deadline-wrapper {__version__}",
     )
-    parser.add_argument(dest="n", help="n-th Fibonacci number", type=int, metavar="INT")
     parser.add_argument(
         "-v",
         "--verbose",
@@ -165,7 +229,6 @@ def parse_args(args):
 
     subparser_rcs = subparsers.add_parser(
         "install-rcs",
-        aliases=["rcs"],
     )
 
     subparser_rcs.add_argument(
@@ -200,7 +263,46 @@ def parse_args(args):
         required=True,
         type=int,
         default=8888,
-        help="http port",
+        help="rcs http port",
+    )
+
+    subparser_webservice = subparsers.add_parser(
+        "install-webservice",
+    )
+
+    subparser_webservice.add_argument(
+        "--deadline-version",
+        dest="deadline_version",
+        required=True,
+        default="10.2.1",
+        help="Deadline version",
+    )
+
+    subparser_webservice.add_argument(
+        "--prefix",
+        dest="prefix",
+        required=True,
+        type=pathlib.Path,
+        default=pathlib.Path("/opt/Thinkbox/Deadline10"),
+        help="prefix to install with",
+    )
+
+    subparser_webservice.add_argument(
+        "--repositorydir",
+        dest="repositorydir",
+        required=True,
+        type=pathlib.Path,
+        default=pathlib.Path("/opt/Thinkbox/DeadlineRepository10"),
+        help="repository directory",
+    )
+
+    subparser_webservice.add_argument(
+        "--webservice-httpport",
+        dest="webservice_httpport",
+        required=True,
+        type=int,
+        default=8899,
+        help="webservice http port",
     )
 
     return parser.parse_args(args)
@@ -230,6 +332,7 @@ def main(args):
     """
     args = parse_args(args)
     setup_logging(args.loglevel)
+
     if args.install_rcs:
         install_rcs(
             deadline_version=args.deadline_version,
@@ -237,6 +340,15 @@ def main(args):
             repositorydir=args.repositorydir,
             httpport=args.httpport,
         )
+
+    elif args.install_webservice:
+        install_webservice(
+            deadline_version=args.deadline_version,
+            prefix=args.prefix,
+            repositorydir=args.repositorydir,
+            webservice_httpport=args.webservice_httpport,
+        )
+
 
 def run():
     """Calls :func:`main` passing the CLI arguments extracted from :obj:`sys.argv`

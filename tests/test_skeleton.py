@@ -1,6 +1,6 @@
 import pytest
 
-from deadline_wrapper.skeleton import fib, main
+from deadline_wrapper.deadline_wrapper import fib, main
 
 __author__ = "Michael Mussato"
 __copyright__ = "Michael Mussato"
