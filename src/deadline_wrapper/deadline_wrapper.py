@@ -158,7 +158,7 @@ def install_rcs(
         force_reinstall: bool = False,
 ):
 
-    assert installers_dir.exists()
+    # assert installers_dir.exists()
 
     installer = installers_dir / f"DeadlineClient-${deadline_version}-linux-x64-installer.run"
 
