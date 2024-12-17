@@ -99,7 +99,7 @@ def install_webservice(
 
     assert installers_dir.exists()
 
-    installer = installers_dir / f"DeadlineClient-${deadline_version}-linux-x64-installer.run"
+    installer = installers_dir / f"DeadlineClient-{deadline_version}-linux-x64-installer.run"
 
     assert installer.exists()
     assert 8000 <= webservice_httpport <= 65535
@@ -158,9 +158,9 @@ def install_rcs(
         force_reinstall: bool = False,
 ):
 
-    # assert installers_dir.exists()
+    assert installers_dir.exists()
 
-    installer = installers_dir / f"DeadlineClient-${deadline_version}-linux-x64-installer.run"
+    installer = installers_dir / f"DeadlineClient-{deadline_version}-linux-x64-installer.run"
 
     print(installer)
 
