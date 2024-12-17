@@ -141,8 +141,8 @@ def install_webservice(
 
     stdout, stderr = proc.communicate()
 
-    _logger.info(stdout)
-    _logger.error(stderr)
+    _logger.info(stdout.decode("utf-8"))
+    _logger.error(stderr.decode("utf-8"))
 
     shutil.move(installer_log, prefix)
 
@@ -204,8 +204,8 @@ def install_rcs(
 
     stdout, stderr = proc.communicate()
 
-    _logger.info(stdout)
-    _logger.error(stderr)
+    _logger.info(stdout.decode("utf-8"))
+    _logger.error(stderr.decode("utf-8"))
 
     shutil.move(installer_log, prefix)
 
