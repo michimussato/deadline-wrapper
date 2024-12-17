@@ -223,8 +223,6 @@ def parse_args(args):
     )
 
     subparsers = parser.add_subparsers(
-        # title="install-rcs",
-        # dest="install_rcs",
     )
 
     subparser_rcs = subparsers.add_parser(
