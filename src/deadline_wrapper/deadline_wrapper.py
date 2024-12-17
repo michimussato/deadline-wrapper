@@ -82,8 +82,11 @@ fi;
 def empty_dir(
         path: pathlib.Path,
 ) -> pathlib.Path:
-    for file in os.scandir(path):
-        os.remove(file.path)
+    for item in os.scandir(path):
+        if item.is_dir():
+            shutil.rmtree(item.path)
+        else:
+            os.remove(item.path)
 
     return path
 
