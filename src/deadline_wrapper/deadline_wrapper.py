@@ -267,7 +267,7 @@ def parse_args(args):
         "--deadline-version",
         dest="deadline_version",
         required=True,
-        default="10.2.1",
+        default="10.2.1.1",
         help="Deadline version",
     )
 
@@ -313,7 +313,7 @@ def parse_args(args):
         "--deadline-version",
         dest="deadline_version",
         required=True,
-        default="10.2.1",
+        default="10.2.1.1",
         help="Deadline version",
     )
 
