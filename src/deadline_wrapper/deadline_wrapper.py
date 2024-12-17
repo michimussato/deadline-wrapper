@@ -36,6 +36,9 @@ __license__ = "MIT"
 _logger = logging.getLogger(__name__)
 
 
+INSTALLER_DIR = pathlib.Path("/deadline_installer")
+
+
 # ---- Python API ----
 # The functions defined in this section can be imported by users in their
 # Python scripts/interactive interpreter, e.g. via
@@ -80,9 +83,12 @@ def install_webservice(
         prefix: pathlib.Path,
         repositorydir: pathlib.Path,
         webservice_httpport: int,
+        installers_dir: pathlib.Path = INSTALLER_DIR,
 ):
 
-    installer = pathlib.Path(f"/deadline_installers/DeadlineClient-${deadline_version}-linux-x64-installer.run")
+    assert installers_dir.exists()
+
+    installer = installers_dir / f"DeadlineClient-${deadline_version}-linux-x64-installer.run"
 
     assert installer.exists()
     assert 8000 <= webservice_httpport <= 65535
@@ -134,9 +140,12 @@ def install_rcs(
         prefix: pathlib.Path,
         repositorydir: pathlib.Path,
         httpport: int,
+        installers_dir: pathlib.Path = INSTALLER_DIR,
 ):
 
-    installer = pathlib.Path(f"/deadline_installers/DeadlineClient-${deadline_version}-linux-x64-installer.run")
+    assert installers_dir.exists()
+
+    installer = installers_dir / f"DeadlineClient-${deadline_version}-linux-x64-installer.run"
 
     assert installer.exists()
     assert 8000 <= httpport <= 65535
