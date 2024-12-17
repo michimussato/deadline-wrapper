@@ -129,7 +129,7 @@ def install_webservice(
     cmd.extend(["--enable-components", "webservice_config"])
     cmd.extend(["--blockautoupdateoverride", "NotBlocked"])
     cmd.extend(["--webserviceuser", "root"])
-    cmd.extend(["--webservice_httpport", webservice_httpport])
+    cmd.extend(["--webservice_httpport", str(webservice_httpport)])
     cmd.extend(["--webservice_enabletls", "false"])
 
     proc = subprocess.Popen(
@@ -190,7 +190,7 @@ def install_rcs(
     cmd.extend(["--repositorydir", repositorydir.as_posix()])
     cmd.extend(["--launcherdaemon", "false"])
     cmd.extend(["--enable-components", "proxyconfig"])
-    cmd.extend(["--httpport", httpport])
+    cmd.extend(["--httpport", str(httpport)])
     cmd.extend(["--enabletls", "false"])
     cmd.extend(["--proxyalwaysrunning", "false"])
     cmd.extend(["--blockautoupdateoverride", "NotBlocked"])
