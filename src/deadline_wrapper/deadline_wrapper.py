@@ -121,7 +121,7 @@ def install_webservice(
 
     cmd = list()
 
-    cmd.append(installer)
+    cmd.append(installer.as_posix())
     cmd.extend(["--mode", "unattended"])
     cmd.extend(["--prefix", prefix.as_posix()])
     cmd.extend(["--repositorydir", repositorydir.as_posix()])
@@ -184,7 +184,7 @@ def install_rcs(
 
     cmd = list()
 
-    cmd.append(installer)
+    cmd.append(installer.as_posix())
     cmd.extend(["--mode", "unattended"])
     cmd.extend(["--prefix", prefix.as_posix()])
     cmd.extend(["--repositorydir", repositorydir.as_posix()])
