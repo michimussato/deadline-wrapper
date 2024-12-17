@@ -123,8 +123,8 @@ def install_webservice(
 
     cmd.append(installer)
     cmd.extend(["--mode", "unattended"])
-    cmd.extend(["--prefix", prefix])
-    cmd.extend(["--repositorydir", repositorydir])
+    cmd.extend(["--prefix", prefix.as_posix()])
+    cmd.extend(["--repositorydir", repositorydir.as_posix()])
     cmd.extend(["--launcherdaemon", "false"])
     cmd.extend(["--enable-components", "webservice_config"])
     cmd.extend(["--blockautoupdateoverride", "NotBlocked"])
@@ -136,7 +136,7 @@ def install_webservice(
         cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        cwd=prefix,
+        # cwd=prefix.as_posix(),
     )
 
     stdout, stderr = proc.communicate()
@@ -186,8 +186,8 @@ def install_rcs(
 
     cmd.append(installer)
     cmd.extend(["--mode", "unattended"])
-    cmd.extend(["--prefix", prefix])
-    cmd.extend(["--repositorydir", repositorydir])
+    cmd.extend(["--prefix", prefix.as_posix()])
+    cmd.extend(["--repositorydir", repositorydir.as_posix()])
     cmd.extend(["--launcherdaemon", "false"])
     cmd.extend(["--enable-components", "proxyconfig"])
     cmd.extend(["--httpport", httpport])
@@ -199,7 +199,7 @@ def install_rcs(
         cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        cwd=prefix,
+        # cwd=prefix.as_posix(),
     )
 
     stdout, stderr = proc.communicate()
