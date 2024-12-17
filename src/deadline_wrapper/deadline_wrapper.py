@@ -249,19 +249,27 @@ def parse_args(args):
         const=logging.DEBUG,
     )
 
+    parser.add_argument(
+        "--force-reinstall",
+        dest="force_reinstall",
+        action="store_true",
+        help="force deletion and then install",
+    )
+
     subparsers = parser.add_subparsers(
+        dest="sub_command",
     )
 
     subparser_rcs = subparsers.add_parser(
         "install-rcs",
     )
 
-    subparser_rcs.add_argument(
-        "--force-reinstall",
-        dest="force_reinstall",
-        action="store_true",
-        help="force deletion and theb install",
-    )
+    # subparser_rcs.add_argument(
+    #     "--force-reinstall",
+    #     dest="force_reinstall",
+    #     action="store_true",
+    #     help="force deletion and theb install",
+    # )
 
     subparser_rcs.add_argument(
         "--deadline-version",
@@ -302,12 +310,12 @@ def parse_args(args):
         "install-webservice",
     )
 
-    subparser_webservice.add_argument(
-        "--force-reinstall",
-        dest="force_reinstall",
-        action="store_true",
-        help="force deletion and theb install",
-    )
+    # subparser_webservice.add_argument(
+    #     "--force-reinstall",
+    #     dest="force_reinstall",
+    #     action="store_true",
+    #     help="force deletion and theb install",
+    # )
 
     subparser_webservice.add_argument(
         "--deadline-version",
@@ -372,7 +380,7 @@ def main(args):
     args = parse_args(args)
     setup_logging(args.loglevel)
 
-    if args.install_rcs:
+    if args.sub_command == "install_rcs":
         install_rcs(
             deadline_version=args.deadline_version,
             prefix=args.prefix,
@@ -381,7 +389,7 @@ def main(args):
             force_reinstall=args.force_reinstall,
         )
 
-    elif args.install_webservice:
+    if args.sub_command == "install_webservice":
         install_webservice(
             deadline_version=args.deadline_version,
             prefix=args.prefix,
