@@ -261,7 +261,6 @@ def parse_args(args):
         dest="force_reinstall",
         action="store_true",
         help="force deletion and theb install",
-        default=False,
     )
 
     subparser_rcs.add_argument(
@@ -308,7 +307,6 @@ def parse_args(args):
         dest="force_reinstall",
         action="store_true",
         help="force deletion and theb install",
-        default=False,
     )
 
     subparser_webservice.add_argument(
