@@ -20,6 +20,7 @@ References:
     - https://pip.pypa.io/en/stable/reference/pip_install
 """
 
+import os
 import argparse
 import logging
 import sys
@@ -78,12 +79,22 @@ fi;
 """
 
 
+def empty_dir(
+        path: pathlib.Path,
+) -> pathlib.Path:
+    for file in os.scandir(path):
+        os.remove(file.path)
+
+    return path
+
+
 def install_webservice(
         deadline_version: str,
         prefix: pathlib.Path,
         repositorydir: pathlib.Path,
         webservice_httpport: int,
         installers_dir: pathlib.Path = INSTALLER_DIR,
+        force_reinstall: bool = False,
 ):
 
     assert installers_dir.exists()
@@ -101,6 +112,9 @@ def install_webservice(
 
     if installer_log.exists():
         shutil.rmtree(installer_log, ignore_errors=True)
+
+    if force_reinstall:
+        empty_dir(prefix)
 
     cmd = list()
 
@@ -141,6 +155,7 @@ def install_rcs(
         repositorydir: pathlib.Path,
         httpport: int,
         installers_dir: pathlib.Path = INSTALLER_DIR,
+        force_reinstall: bool = False,
 ):
 
     assert installers_dir.exists()
@@ -158,6 +173,9 @@ def install_rcs(
 
     if installer_log.exists():
         shutil.rmtree(installer_log, ignore_errors=True)
+
+    if force_reinstall:
+        empty_dir(prefix)
 
     cmd = list()
 
@@ -232,6 +250,14 @@ def parse_args(args):
     )
 
     subparsers = parser.add_subparsers(
+    )
+
+    parser.add_argument(
+        "--force-reinstall",
+        dest="force_reinstall",
+        action="store_true",
+        help="force deletion and theb install",
+        default=False,
     )
 
     subparser_rcs = subparsers.add_parser(
@@ -346,6 +372,7 @@ def main(args):
             prefix=args.prefix,
             repositorydir=args.repositorydir,
             httpport=args.httpport,
+            force_reinstall=args.force_reinstall,
         )
 
     elif args.install_webservice:
@@ -354,6 +381,7 @@ def main(args):
             prefix=args.prefix,
             repositorydir=args.repositorydir,
             webservice_httpport=args.webservice_httpport,
+            force_reinstall=args.force_reinstall,
         )
 
 
