@@ -252,16 +252,16 @@ def parse_args(args):
     subparsers = parser.add_subparsers(
     )
 
-    parser.add_argument(
+    subparser_rcs = subparsers.add_parser(
+        "install-rcs",
+    )
+
+    subparser_rcs.add_argument(
         "--force-reinstall",
         dest="force_reinstall",
         action="store_true",
         help="force deletion and theb install",
         default=False,
-    )
-
-    subparser_rcs = subparsers.add_parser(
-        "install-rcs",
     )
 
     subparser_rcs.add_argument(
@@ -301,6 +301,14 @@ def parse_args(args):
 
     subparser_webservice = subparsers.add_parser(
         "install-webservice",
+    )
+
+    subparser_webservice.add_argument(
+        "--force-reinstall",
+        dest="force_reinstall",
+        action="store_true",
+        help="force deletion and theb install",
+        default=False,
     )
 
     subparser_webservice.add_argument(
