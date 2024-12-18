@@ -103,7 +103,7 @@ def install_webservice(
 
     installer = installers_dir / f"DeadlineClient-{deadline_version}-linux-x64-installer.run"
 
-    assert installer.exists(), _logger.error(f"Installer {installer} does not exist")
+    assert installer.exists(), f"Installer {installer} does not exist"
     assert 8000 <= webservice_httpport <= 65535
     assert deadline_version in [
         "10.2.1.1",
@@ -163,7 +163,7 @@ def install_rcs(
 
     installer = installers_dir / f"DeadlineClient-{deadline_version}-linux-x64-installer.run"
 
-    assert installer.exists(), _logger.error(f"Installer {installer} does not exist")
+    assert installer.exists(), f"Installer {installer} does not exist"
     assert 8000 <= httpport <= 65535
     assert deadline_version in [
         "10.2.1.1",
