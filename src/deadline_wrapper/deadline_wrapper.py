@@ -99,13 +99,15 @@ def install_webservice(
         force_reinstall: bool = False,
 ):
 
-    installers_dir = pathlib.Path(INSTALLER_DIR.format(deadline_version=deadline_version))
+    _deadline_version = os.environ.get(deadline_version)
 
-    installer = installers_dir / f"DeadlineClient-{deadline_version}-linux-x64-installer.run"
+    installers_dir = pathlib.Path(INSTALLER_DIR.format(deadline_version=_deadline_version))
+
+    installer = installers_dir / f"DeadlineClient-{_deadline_version}-linux-x64-installer.run"
 
     assert installer.exists(), f"Installer {installer} does not exist"
     assert 8000 <= webservice_httpport <= 65535
-    assert deadline_version in [
+    assert _deadline_version in [
         "10.2.1.1",
         "10.4.0.10",
     ]
@@ -160,13 +162,15 @@ def install_rcs(
         force_reinstall: bool = False,
 ):
 
-    installers_dir = pathlib.Path(INSTALLER_DIR.format(deadline_version=deadline_version))
+    _deadline_version = os.environ.get(deadline_version)
 
-    installer = installers_dir / f"DeadlineClient-{deadline_version}-linux-x64-installer.run"
+    installers_dir = pathlib.Path(INSTALLER_DIR.format(deadline_version=_deadline_version))
+
+    installer = installers_dir / f"DeadlineClient-{_deadline_version}-linux-x64-installer.run"
 
     assert installer.exists(), f"Installer {installer} does not exist"
     assert 8000 <= httpport <= 65535
-    assert deadline_version in [
+    assert _deadline_version in [
         "10.2.1.1",
         "10.4.0.10",
     ]
