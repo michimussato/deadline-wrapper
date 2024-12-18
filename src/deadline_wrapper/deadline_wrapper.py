@@ -134,7 +134,7 @@ def install_repository(
     cmd.extend(["--dbtype", dbtype])
     cmd.extend(["--installmongodb", "false"])
     cmd.extend(["--dbhost", dbhost])
-    cmd.extend(["--dbport", dbport])
+    cmd.extend(["--dbport", str(dbport)])
     cmd.extend(["--dbname", dbname])
     cmd.extend(["--dbauth", "false"])
     cmd.extend(["--dbssl", "false"])
