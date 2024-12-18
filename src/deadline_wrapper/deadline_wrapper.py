@@ -41,42 +41,6 @@ INSTALLER_DIR = "/nfs/installers/Deadline-{deadline_version}-linux-installers"
 
 
 # ---- Python API ----
-# The functions defined in this section can be imported by users in their
-# Python scripts/interactive interpreter, e.g. via
-# `from deadline_wrapper.skeleton import fib`,
-# when using this Python module as a library.
-
-
-# def fib(n):
-#     """Fibonacci example function
-#
-#     Args:
-#       n (int): integer
-#
-#     Returns:
-#       int: n-th Fibonacci number
-#     """
-#     assert n > 0
-#     a, b = 1, 1
-#     for _i in range(n - 1):
-#         a, b = b, a + b
-#     return a
-
-"""
-if [ "$1" = "install" ]; then
-    echo "Installing DeadlineClient (proxyconfig)...";
-
-    mkdir -p /var/lib/Thinkbox/Deadline10
-
-    ./DeadlineClient-${DEADLINE_VERSION}-linux-x64-installer.run \
-    
-
-    mv -f /tmp/installbuilder_installer.log /opt/Thinkbox/Deadline10
-    cat /opt/Thinkbox/Deadline10/installbuilder_installer.log
-
-    exit 0;
-fi;
-"""
 
 
 def empty_dir(
@@ -298,10 +262,36 @@ def install_rcs(
 
     return installer_log
 
+
+def runner(
+        executable: pathlib.Path,
+        arguements: list[str] = None,
+):
+
+    assert executable.exists(), f"Executable {executable} does not exist"
+    deadline_ini = pathlib.Path("/var/lib/Thinkbox/Deadline10/deadline.ini")
+    assert deadline_ini.exists(), f"{deadline_ini} does not exist"
+
+    cmd = list()
+    cmd.append(executable.as_posix())
+
+    if arguements is not None:
+        cmd.extend(arguements)
+
+    proc = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        # cwd=prefix.as_posix(),
+    )
+
+    stdout, stderr = proc.communicate()
+
+    _logger.info(stdout.decode("utf-8"))
+    _logger.error(stderr.decode("utf-8"))
+
+
 # ---- CLI ----
-# The functions defined in this section are wrappers around the main Python
-# API allowing them to be called directly from the terminal as a CLI
-# executable/script.
 
 
 def parse_args(args):
@@ -348,6 +338,10 @@ def parse_args(args):
     subparsers = parser.add_subparsers(
         dest="sub_command",
     )
+
+    # Installer
+
+    ## Repository
 
     subparser_repository = subparsers.add_parser(
         "install-repository",
@@ -406,6 +400,8 @@ def parse_args(args):
         default="deadline10db",
         help="db name",
     )
+
+    ## RCS
 
     subparser_rcs = subparsers.add_parser(
         "install-rcs",
@@ -485,6 +481,54 @@ def parse_args(args):
         help="webservice http port",
     )
 
+    # Runner
+
+    subparser_run = subparsers.add_parser(
+        "run",
+    )
+
+    subparser_run.add_argument(
+        "--executable",
+        dest="executable",
+        required=True,
+        type=pathlib.Path,
+        choices=[
+            pathlib.Path("/opt/Thinkbox/Deadline10/bin/deadlinercs"),
+            pathlib.Path("/opt/Thinkbox/Deadline10/bin/deadlinewebservice"),
+        ],
+        default=None,
+        help="run executable",
+    )
+
+    # subparser_run.add_argument(
+    #     "--arguements",
+    #     dest="arguements",
+    #     required=False,
+    #     type=pathlib.Path,
+    #     default=None,
+    #     help="run executable",
+    # )
+
+    # runner_group = subparser_run.add_mutually_exclusive_group(
+    #     required=True
+    # )
+    #
+    # runner_group.add_argument(
+    #     "rcs",
+    #     required=False,
+    #     dest="rcs",
+    #     action="store_true",
+    #     help="run rcs",
+    # )
+    #
+    # runner_group.add_argument(
+    #     "webservice",
+    #     required=False,
+    #     dest="webservice",
+    #     action="store_true",
+    #     help="run webservice",
+    # )
+
     return parser.parse_args(args)
 
 
@@ -540,6 +584,13 @@ def main(args):
             dbport=args.dbport,
             dbname=args.dbname,
             force_reinstall=args.force_reinstall,
+        )
+
+    elif args.sub_command == "run":
+        # if args.rcs:
+        #     executable = pathlib.Path(args.executable)
+        runner(
+            executable=args.executable,
         )
 
 
