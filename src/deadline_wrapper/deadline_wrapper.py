@@ -117,8 +117,13 @@ def install_repository(
     if installer_log.exists():
         shutil.rmtree(installer_log, ignore_errors=True)
 
-    if force_reinstall:
-        empty_dir(prefix)
+    is_empty = not any(prefix.iterdir())
+
+    if is_empty:
+        if force_reinstall:
+            empty_dir(prefix)
+        else:
+            raise Exception(f"{prefix} is not empty")
 
     cmd = list()
 
@@ -180,8 +185,13 @@ def install_webservice(
     if installer_log.exists():
         shutil.rmtree(installer_log, ignore_errors=True)
 
-    if force_reinstall:
-        empty_dir(prefix)
+    is_empty = not any(prefix.iterdir())
+
+    if is_empty:
+        if force_reinstall:
+            empty_dir(prefix)
+        else:
+            raise Exception(f"{prefix} is not empty")
 
     cmd = list()
 
@@ -241,8 +251,13 @@ def install_rcs(
     if installer_log.exists():
         shutil.rmtree(installer_log, ignore_errors=True)
 
-    if force_reinstall:
-        empty_dir(prefix)
+    is_empty = not any(prefix.iterdir())
+
+    if is_empty:
+        if force_reinstall:
+            empty_dir(prefix)
+        else:
+            raise Exception(f"{prefix} is not empty")
 
     cmd = list()
 
