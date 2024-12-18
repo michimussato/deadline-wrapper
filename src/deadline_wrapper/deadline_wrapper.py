@@ -153,7 +153,9 @@ def install_repository(
     _logger.info(stdout.decode("utf-8"))
     _logger.error(stderr.decode("utf-8"))
 
-    shutil.move(installer_log, prefix)
+    # shutil.Error: Destination path '/opt/Thinkbox/DeadlineRepository10/installbuilder_installer.log' already exists
+    # If the filename is included in the destination path (relative or absolute) shutil will overwrite.
+    shutil.move(installer_log, prefix / "installbuilder_installer.log")
 
     with open(prefix / "installbuilder_installer.log", "r") as fo:
         _logger.info(fo.read())
@@ -219,7 +221,9 @@ def install_webservice(
     _logger.info(stdout.decode("utf-8"))
     _logger.error(stderr.decode("utf-8"))
 
-    shutil.move(installer_log, prefix)
+    # shutil.Error: Destination path '/opt/Thinkbox/DeadlineRepository10/installbuilder_installer.log' already exists
+    # If the filename is included in the destination path (relative or absolute) shutil will overwrite.
+    shutil.move(installer_log, prefix / "installbuilder_installer.log")
 
     with open(prefix / "installbuilder_installer.log", "r") as fo:
         _logger.info(fo.read())
@@ -285,7 +289,9 @@ def install_rcs(
     _logger.info(stdout.decode("utf-8"))
     _logger.error(stderr.decode("utf-8"))
 
-    shutil.move(installer_log, prefix)
+    # shutil.Error: Destination path '/opt/Thinkbox/DeadlineRepository10/installbuilder_installer.log' already exists
+    # If the filename is included in the destination path (relative or absolute) shutil will overwrite.
+    shutil.move(installer_log, prefix / "installbuilder_installer.log")
 
     with open(prefix / "installbuilder_installer.log", "r") as fo:
         _logger.info(fo.read())
