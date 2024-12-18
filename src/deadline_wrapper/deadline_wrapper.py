@@ -37,7 +37,7 @@ __license__ = "MIT"
 _logger = logging.getLogger(__name__)
 
 
-INSTALLER_DIR = pathlib.Path("/deadline_installer")
+INSTALLER_DIR = "/nfs/installers/Deadline-{deadline_version}-linux-installers"
 
 
 # ---- Python API ----
@@ -96,11 +96,10 @@ def install_webservice(
         prefix: pathlib.Path,
         repositorydir: pathlib.Path,
         webservice_httpport: int,
-        installers_dir: pathlib.Path = INSTALLER_DIR,
         force_reinstall: bool = False,
 ):
 
-    assert installers_dir.exists()
+    installers_dir = pathlib.Path(INSTALLER_DIR.format(deadline_version=deadline_version))
 
     installer = installers_dir / f"DeadlineClient-{deadline_version}-linux-x64-installer.run"
 
@@ -157,15 +156,12 @@ def install_rcs(
         prefix: pathlib.Path,
         repositorydir: pathlib.Path,
         httpport: int,
-        installers_dir: pathlib.Path = INSTALLER_DIR,
         force_reinstall: bool = False,
 ):
 
-    assert installers_dir.exists()
+    installers_dir = pathlib.Path(INSTALLER_DIR.format(deadline_version=deadline_version))
 
     installer = installers_dir / f"DeadlineClient-{deadline_version}-linux-x64-installer.run"
-
-    print(installer)
 
     assert installer.exists()
     assert 8000 <= httpport <= 65535
