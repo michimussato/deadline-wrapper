@@ -91,6 +91,71 @@ def empty_dir(
     return path
 
 
+def install_repository(
+        deadline_version: str,
+        prefix: pathlib.Path,
+        dbtype: str,
+        dbhost: str,
+        dbport: int,
+        dbname: str,
+        force_reinstall: bool = False,
+):
+
+    installers_dir = pathlib.Path(INSTALLER_DIR.format(deadline_version=deadline_version))
+
+    installer = installers_dir / f"DeadlineRepository-{deadline_version}-linux-x64-installer.run"
+
+    assert installer.exists(), f"Installer {installer} does not exist"
+    assert 8000 <= dbport <= 65535
+    assert deadline_version in [
+        "10.2.1.1",
+        "10.4.0.10",
+    ]
+
+    installer_log = pathlib.Path("/tmp/installbuilder_installer.log")
+
+    if installer_log.exists():
+        shutil.rmtree(installer_log, ignore_errors=True)
+
+    if force_reinstall:
+        empty_dir(prefix)
+
+    cmd = list()
+
+    cmd.append(installer.as_posix())
+    cmd.extend(["--mode", "unattended"])
+    cmd.extend(["--prefix", prefix.as_posix()])
+    cmd.extend(["--setpermissions", "true"])
+    cmd.extend(["--dbtype", dbtype])
+    cmd.extend(["--installmongodb", "false"])
+    cmd.extend(["--dbhost", dbhost])
+    cmd.extend(["--dbport", dbport])
+    cmd.extend(["--dbname", dbname])
+    cmd.extend(["--dbauth", "false"])
+    cmd.extend(["--dbssl", "false"])
+    cmd.extend(["--installSecretsManagement", "false"])
+    cmd.extend(["--importrepositorysettings", "false"])
+
+    proc = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        # cwd=prefix.as_posix(),
+    )
+
+    stdout, stderr = proc.communicate()
+
+    _logger.info(stdout.decode("utf-8"))
+    _logger.error(stderr.decode("utf-8"))
+
+    shutil.move(installer_log, prefix)
+
+    with open(prefix / "installbuilder_installer.log", "r") as fo:
+        _logger.info(fo.read())
+
+    return installer_log
+
+
 def install_webservice(
         deadline_version: str,
         prefix: pathlib.Path,
@@ -263,16 +328,67 @@ def parse_args(args):
         dest="sub_command",
     )
 
+    subparser_repository = subparsers.add_parser(
+        "install-repository",
+    )
+
+    subparser_repository.add_argument(
+        "--deadline-version",
+        dest="deadline_version",
+        required=True,
+        default="10.2.1.1",
+        help="Deadline version",
+    )
+
+    subparser_repository.add_argument(
+        "--prefix",
+        dest="prefix",
+        required=True,
+        type=pathlib.Path,
+        default=pathlib.Path("/opt/Thinkbox/DeadlineRepository10"),
+        help="prefix to install with",
+    )
+
+    subparser_repository.add_argument(
+        "--dbtype",
+        dest="dbtype",
+        required=True,
+        type=str,
+        default="MongoDB",
+        choices=["MongoDB", "DocumentDB"],
+        help="DB type",
+    )
+
+    subparser_repository.add_argument(
+        "--dbhost",
+        dest="dbhost",
+        required=True,
+        type=str,
+        default="mongodb-10-2",
+        help="hostname of db server",
+    )
+
+    subparser_repository.add_argument(
+        "--dbport",
+        dest="dbport",
+        required=True,
+        type=int,
+        default=27017,
+        help="db port",
+    )
+
+    subparser_repository.add_argument(
+        "--dbname",
+        dest="dbname",
+        required=True,
+        type=str,
+        default="deadline10db",
+        help="db name",
+    )
+
     subparser_rcs = subparsers.add_parser(
         "install-rcs",
     )
-
-    # subparser_rcs.add_argument(
-    #     "--force-reinstall",
-    #     dest="force_reinstall",
-    #     action="store_true",
-    #     help="force deletion and theb install",
-    # )
 
     subparser_rcs.add_argument(
         "--deadline-version",
@@ -312,13 +428,6 @@ def parse_args(args):
     subparser_webservice = subparsers.add_parser(
         "install-webservice",
     )
-
-    # subparser_webservice.add_argument(
-    #     "--force-reinstall",
-    #     dest="force_reinstall",
-    #     action="store_true",
-    #     help="force deletion and theb install",
-    # )
 
     subparser_webservice.add_argument(
         "--deadline-version",
@@ -398,6 +507,17 @@ def main(args):
             prefix=args.prefix,
             repositorydir=args.repositorydir,
             webservice_httpport=args.webservice_httpport,
+            force_reinstall=args.force_reinstall,
+        )
+
+    elif args.sub_command == "install-repository":
+        install_repository(
+            deadline_version=args.deadline_version,
+            prefix=args.prefix,
+            dbtype=args.dbtype,
+            dbhost=args.dbhost,
+            dbport=args.dbport,
+            dbname=args.dbname,
             force_reinstall=args.force_reinstall,
         )
 
