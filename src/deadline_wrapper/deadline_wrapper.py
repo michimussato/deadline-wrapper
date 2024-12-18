@@ -99,7 +99,10 @@ def install_webservice(
         force_reinstall: bool = False,
 ):
 
-    _deadline_version = os.environ.get(deadline_version)
+    try:
+        _deadline_version = os.environ[deadline_version]
+    except KeyError:
+        _deadline_version = deadline_version
 
     installers_dir = pathlib.Path(INSTALLER_DIR.format(deadline_version=_deadline_version))
 
@@ -162,7 +165,10 @@ def install_rcs(
         force_reinstall: bool = False,
 ):
 
-    _deadline_version = os.environ.get(deadline_version)
+    try:
+        _deadline_version = os.environ[deadline_version]
+    except KeyError:
+        _deadline_version = deadline_version
 
     installers_dir = pathlib.Path(INSTALLER_DIR.format(deadline_version=_deadline_version))
 
