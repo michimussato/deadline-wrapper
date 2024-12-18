@@ -495,6 +495,8 @@ def parse_args(args):
         choices=[
             pathlib.Path("/opt/Thinkbox/Deadline10/bin/deadlinercs"),
             pathlib.Path("/opt/Thinkbox/Deadline10/bin/deadlinewebservice"),
+            pathlib.Path("/opt/Thinkbox/Deadline10/bin/deadlinepulse"),
+            pathlib.Path("/opt/Thinkbox/Deadline10/bin/deadlineworker"),
         ],
         default=None,
         help="run executable",
