@@ -1,27 +1,27 @@
 .. These are examples of badges you might want to add to your README:
    please update the URLs accordingly
 
-    .. image:: https://api.cirrus-ci.com/github/<USER>/deadline-wrapper.svg?branch=main
+    .. image:: https://api.cirrus-ci.com/github/<USER>/deadline-wrapper-10-2.svg?branch=main
         :alt: Built Status
-        :target: https://cirrus-ci.com/github/<USER>/deadline-wrapper
-    .. image:: https://readthedocs.org/projects/deadline-wrapper/badge/?version=latest
+        :target: https://cirrus-ci.com/github/<USER>/deadline-wrapper-10-2
+    .. image:: https://readthedocs.org/projects/deadline-wrapper-10-2/badge/?version=latest
         :alt: ReadTheDocs
-        :target: https://deadline-wrapper.readthedocs.io/en/stable/
-    .. image:: https://img.shields.io/coveralls/github/<USER>/deadline-wrapper/main.svg
+        :target: https://deadline-wrapper-10-2.readthedocs.io/en/stable/
+    .. image:: https://img.shields.io/coveralls/github/<USER>/deadline-wrapper-10-2/main.svg
         :alt: Coveralls
-        :target: https://coveralls.io/r/<USER>/deadline-wrapper
-    .. image:: https://img.shields.io/pypi/v/deadline-wrapper.svg
+        :target: https://coveralls.io/r/<USER>/deadline-wrapper-10-2
+    .. image:: https://img.shields.io/pypi/v/deadline-wrapper-10-2.svg
         :alt: PyPI-Server
-        :target: https://pypi.org/project/deadline-wrapper/
-    .. image:: https://img.shields.io/conda/vn/conda-forge/deadline-wrapper.svg
+        :target: https://pypi.org/project/deadline-wrapper-10-2/
+    .. image:: https://img.shields.io/conda/vn/conda-forge/deadline-wrapper-10-2.svg
         :alt: Conda-Forge
-        :target: https://anaconda.org/conda-forge/deadline-wrapper
-    .. image:: https://pepy.tech/badge/deadline-wrapper/month
+        :target: https://anaconda.org/conda-forge/deadline-wrapper-10-2
+    .. image:: https://pepy.tech/badge/deadline-wrapper-10-2/month
         :alt: Monthly Downloads
-        :target: https://pepy.tech/project/deadline-wrapper
+        :target: https://pepy.tech/project/deadline-wrapper-10-2
     .. image:: https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Twitter
         :alt: Twitter
-        :target: https://twitter.com/deadline-wrapper
+        :target: https://twitter.com/deadline-wrapper-10-2
 
 .. image:: https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold
     :alt: Project generated with PyScaffold
@@ -29,9 +29,9 @@
 
 |
 
-================
-deadline-wrapper
-================
+=====================
+deadline-wrapper-10-2
+=====================
 
 
     Add a short description here!

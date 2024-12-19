@@ -28,7 +28,7 @@ import pathlib
 import subprocess
 import shutil
 
-from deadline_wrapper import __version__
+from deadline_docker.deadline_wrapper_10_2 import __version__
 
 __author__ = "Michael Mussato"
 __copyright__ = "Michael Mussato"
