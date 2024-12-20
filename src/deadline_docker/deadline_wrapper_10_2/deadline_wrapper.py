@@ -690,6 +690,7 @@ def main(args):
             prefix=args.prefix,
             repositorydir=args.repositorydir,
             httpport=args.httpport,
+            webservice_httpport=args.webservice_httpport,
             force_reinstall=args.force_reinstall,
         )
 
