@@ -510,6 +510,15 @@ def parse_args(args):
         help="rcs http port",
     )
 
+    subparser_client.add_argument(
+        "--webservice-httpport",
+        dest="webservice_httpport",
+        required=True,
+        type=int,
+        default=8899,
+        help="webservice http port",
+    )
+
     ## RCS
 
     subparser_rcs = subparsers.add_parser(
