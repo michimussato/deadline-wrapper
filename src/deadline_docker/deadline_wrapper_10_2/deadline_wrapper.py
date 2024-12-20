@@ -127,6 +127,74 @@ def install_repository(
     return installer_log
 
 
+def install_client(
+        deadline_version: str,
+        prefix: pathlib.Path,
+        repositorydir: pathlib.Path,
+        httpport: int,
+        force_reinstall: bool = False,
+):
+
+    installers_dir = pathlib.Path(INSTALLER_DIR.format(deadline_version=deadline_version))
+
+    installer = installers_dir / f"DeadlineClient-{deadline_version}-linux-x64-installer.run"
+
+    assert installer.exists(), f"Installer {installer} does not exist"
+    assert 8000 <= httpport <= 65535
+    assert deadline_version in [
+        "10.2.1.1",
+        "10.4.0.10",
+    ]
+
+    installer_log = pathlib.Path("/tmp/installbuilder_installer.log")
+
+    if installer_log.exists():
+        shutil.rmtree(installer_log, ignore_errors=True)
+
+    is_empty = not any(prefix.iterdir())
+
+    if is_empty:
+        if force_reinstall:
+            empty_dir(prefix)
+        else:
+            raise Exception(f"{prefix} is not empty")
+
+    cmd = list()
+
+    cmd.append(installer.as_posix())
+    cmd.extend(["--mode", "unattended"])
+    cmd.extend(["--prefix", prefix.as_posix()])
+    cmd.extend(["--setpermissionsclient", "true"])
+    cmd.extend(["--repositorydir", repositorydir.as_posix()])
+    cmd.extend(["--launcherdaemon", "false"])
+    cmd.extend(["--enable-components", "proxyconfig"])
+    cmd.extend(["--httpport", str(httpport)])
+    cmd.extend(["--enabletls", "false"])
+    cmd.extend(["--proxyalwaysrunning", "false"])
+    cmd.extend(["--blockautoupdateoverride", "NotBlocked"])
+
+    proc = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        # cwd=prefix.as_posix(),
+    )
+
+    stdout, stderr = proc.communicate()
+
+    _logger.info(stdout.decode("utf-8"))
+    _logger.error(stderr.decode("utf-8"))
+
+    # shutil.Error: Destination path '/opt/Thinkbox/DeadlineRepository10/installbuilder_installer.log' already exists
+    # If the filename is included in the destination path (relative or absolute) shutil will overwrite.
+    shutil.move(installer_log, prefix / "installbuilder_installer.log")
+
+    with open(prefix / "installbuilder_installer.log", "r") as fo:
+        _logger.info(fo.read())
+
+    return installer_log
+
+
 def install_webservice(
         deadline_version: str,
         prefix: pathlib.Path,
@@ -401,6 +469,47 @@ def parse_args(args):
         help="db name",
     )
 
+    # Client
+
+    subparser_client = subparsers.add_parser(
+        "install-client",
+    )
+
+    subparser_client.add_argument(
+        "--deadline-version",
+        dest="deadline_version",
+        required=True,
+        default="10.2.1.1",
+        help="Deadline version",
+    )
+
+    subparser_client.add_argument(
+        "--prefix",
+        dest="prefix",
+        required=True,
+        type=pathlib.Path,
+        default=pathlib.Path("/opt/Thinkbox/Deadline10"),
+        help="prefix to install with",
+    )
+
+    subparser_client.add_argument(
+        "--repositorydir",
+        dest="repositorydir",
+        required=True,
+        type=pathlib.Path,
+        default=pathlib.Path("/opt/Thinkbox/DeadlineRepository10"),
+        help="repository directory",
+    )
+
+    subparser_client.add_argument(
+        "--httpport",
+        dest="httpport",
+        required=True,
+        type=int,
+        default=8888,
+        help="rcs http port",
+    )
+
     ## RCS
 
     subparser_rcs = subparsers.add_parser(
@@ -441,6 +550,8 @@ def parse_args(args):
         default=8888,
         help="rcs http port",
     )
+
+    ## Webservice
 
     subparser_webservice = subparsers.add_parser(
         "install-webservice",
@@ -559,7 +670,16 @@ def main(args):
     args = parse_args(args)
     setup_logging(args.loglevel)
 
-    if args.sub_command == "install-rcs":
+    if args.sub_command == "install-client":
+        install_client(
+            deadline_version=args.deadline_version,
+            prefix=args.prefix,
+            repositorydir=args.repositorydir,
+            httpport=args.httpport,
+            force_reinstall=args.force_reinstall,
+        )
+
+    elif args.sub_command == "install-rcs":
         install_rcs(
             deadline_version=args.deadline_version,
             prefix=args.prefix,
