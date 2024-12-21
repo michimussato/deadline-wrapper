@@ -316,6 +316,8 @@ def parse_args(args):
         "--deadline-version",
         dest="deadline_version",
         required=True,
+        # Todo:
+        #  - [ ] os.environ
         default="10.2.1.1",
         help="Deadline version",
     )
@@ -325,6 +327,8 @@ def parse_args(args):
         dest="prefix",
         required=True,
         type=pathlib.Path,
+        # Todo:
+        #  - [ ] os.environ
         default=pathlib.Path("/opt/Thinkbox/DeadlineRepository10"),
         help="prefix to install with",
     )
@@ -344,6 +348,8 @@ def parse_args(args):
         dest="dbhost",
         required=True,
         type=str,
+        # Todo:
+        #  - [ ] os.environ
         default="mongodb-10-2",
         help="hostname of db server",
     )
@@ -353,6 +359,8 @@ def parse_args(args):
         dest="dbport",
         required=True,
         type=int,
+        # Todo:
+        #  - [ ] os.environ
         default=27017,
         help="db port",
     )
@@ -362,6 +370,8 @@ def parse_args(args):
         dest="dbname",
         required=True,
         type=str,
+        # Todo:
+        #  - [ ] os.environ
         default="deadline10db",
         help="db name",
     )
@@ -376,6 +386,8 @@ def parse_args(args):
         "--deadline-version",
         dest="deadline_version",
         required=True,
+        # Todo:
+        #  - [ ] os.environ
         default="10.2.1.1",
         help="Deadline version",
     )
@@ -385,6 +397,8 @@ def parse_args(args):
         dest="prefix",
         required=True,
         type=pathlib.Path,
+        # Todo:
+        #  - [ ] os.environ
         default=pathlib.Path("/opt/Thinkbox/Deadline10"),
         help="prefix to install with",
     )
@@ -407,6 +421,8 @@ def parse_args(args):
         dest="repositorydir",
         required=True,
         type=pathlib.Path,
+        # Todo:
+        #  - [ ] os.environ
         default=pathlib.Path("/opt/Thinkbox/DeadlineRepository10"),
         help="repository directory",
     )
@@ -416,6 +432,8 @@ def parse_args(args):
         dest="httpport",
         required=True,
         type=int,
+        # Todo:
+        #  - [ ] os.environ
         default=8888,
         help="rcs http port",
     )
@@ -425,6 +443,8 @@ def parse_args(args):
         dest="webservice_httpport",
         required=True,
         type=int,
+        # Todo:
+        #  - [ ] os.environ
         default=8899,
         help="webservice http port",
     )
@@ -440,6 +460,8 @@ def parse_args(args):
         dest="executable",
         required=True,
         type=pathlib.Path,
+        # Todo:
+        #  - [ ] os.environ
         choices=[
             pathlib.Path("/opt/Thinkbox/Deadline10/bin/deadlinercs"),
             pathlib.Path("/opt/Thinkbox/Deadline10/bin/deadlinewebservice"),
