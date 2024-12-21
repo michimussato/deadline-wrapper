@@ -55,6 +55,10 @@ def empty_dir(
     return path
 
 
+def version_tuple(version: str) -> tuple:
+    return tuple(str(version).split("."))
+
+
 def install_repository(
         deadline_version: str,
         prefix: pathlib.Path,
@@ -180,7 +184,7 @@ def install_client(
     cmd.extend(["--webservice_httpport", str(webservice_httpport)])
     cmd.extend(["--webservice_enabletls", "false"])
 
-    if (10, 4) <= deadline_version <= (10, 5):
+    if (10, 4) <= version_tuple(deadline_version) <= (10, 5):
         # This is new in 10.4
         cmd.extend(["--remotecontrol", "NotBlocked"])
 
