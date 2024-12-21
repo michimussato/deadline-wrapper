@@ -133,6 +133,7 @@ def install_client(
         repositorydir: pathlib.Path,
         httpport: int,
         webservice_httpport: int,
+        # binariesonly: bool,
         force_reinstall: bool = False,
 ):
 
@@ -167,6 +168,7 @@ def install_client(
     cmd.append(installer.as_posix())
     cmd.extend(["--mode", "unattended"])
     cmd.extend(["--prefix", prefix.as_posix()])
+    # cmd.extend(["--binariesonly", str(binariesonly).lower()])
     cmd.extend(["--setpermissionsclient", "true"])
     cmd.extend(["--repositorydir", repositorydir.as_posix()])
     cmd.extend(["--launcherdaemon", "false"])
@@ -177,6 +179,10 @@ def install_client(
     cmd.extend(["--webserviceuser", "root"])
     cmd.extend(["--webservice_httpport", str(webservice_httpport)])
     cmd.extend(["--webservice_enabletls", "false"])
+
+    if (10, 4) <= deadline_version <= (10, 5):
+        # This is new in 10.4
+        cmd.extend(["--remotecontrol", "NotBlocked"])
 
     proc = subprocess.Popen(
         cmd,
@@ -202,7 +208,7 @@ def install_client(
 
 def runner(
         executable: pathlib.Path,
-        arguements: list[str] = None,
+        arguments: list[str],
 ):
 
     assert executable.exists(), f"Executable {executable} does not exist"
@@ -212,8 +218,10 @@ def runner(
     cmd = list()
     cmd.append(executable.as_posix())
 
-    if arguements is not None:
-        cmd.extend(arguements)
+    cmd.extend(arguments)
+
+    print(cmd)
+    print(arguments)
 
     proc = subprocess.Popen(
         cmd,
@@ -361,6 +369,19 @@ def parse_args(args):
         help="prefix to install with",
     )
 
+    # subparser_client.add_argument(
+    #     "--binariesonly",
+    #     dest="binariesonly",
+    #     required=True,
+    #     type=bool,
+    #     default=True,
+    #     help="If enabled, the installer will only "
+    #          "install files to the installation "
+    #          "directory. The installer will not "
+    #          "perform any additional configuration "
+    #          "to run Deadline on this machine.",
+    # )
+
     subparser_client.add_argument(
         "--repositorydir",
         dest="repositorydir",
@@ -407,6 +428,14 @@ def parse_args(args):
         ],
         default=None,
         help="run executable",
+    )
+
+    subparser_run.add_argument(
+        "--arguments",
+        dest="arguments",
+        required=False,
+        nargs="+",
+        help="extra arguments",
     )
 
     return parser.parse_args(args)
@@ -461,6 +490,7 @@ def main(args):
     elif args.sub_command == "run":
         runner(
             executable=args.executable,
+            arguments=args.arguments,
         )
 
 
