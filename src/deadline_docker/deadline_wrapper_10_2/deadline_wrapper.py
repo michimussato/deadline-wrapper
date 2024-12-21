@@ -27,6 +27,7 @@ import sys
 import pathlib
 import subprocess
 import shutil
+import ast
 
 from deadline_docker.deadline_wrapper_10_2 import __version__
 
@@ -212,20 +213,21 @@ def install_client(
 
 def runner(
         executable: pathlib.Path,
-        arguments: list[str],
+        arguments: str,
 ):
 
     assert executable.exists(), f"Executable {executable} does not exist"
     deadline_ini = pathlib.Path("/var/lib/Thinkbox/Deadline10/deadline.ini")
     assert deadline_ini.exists(), f"{deadline_ini} does not exist"
 
+    if bool(arguments):
+        arguments_list = ast.literal_eval(arguments)
+    else:
+        arguments_list = []
+
     cmd = list()
     cmd.append(executable.as_posix())
-
-    print(cmd)
-    print(arguments)
-
-    cmd.extend(arguments)
+    cmd.extend(arguments_list)
 
     proc = subprocess.Popen(
         cmd,
@@ -438,8 +440,9 @@ def parse_args(args):
         "--arguments",
         dest="arguments",
         required=False,
-        default=[],
-        nargs="+",
+        type=str,
+        default="",
+        # nargs="+",
         help="extra arguments",
     )
 
