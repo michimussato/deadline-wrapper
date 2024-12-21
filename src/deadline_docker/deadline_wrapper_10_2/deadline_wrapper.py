@@ -88,11 +88,12 @@ def install_repository(
 
     is_empty = not any(prefix.iterdir())
 
-    if is_empty:
+    if not is_empty:
         if force_reinstall:
             empty_dir(prefix)
         else:
-            raise Exception(f"{prefix} is not empty")
+            _logger.info("Re-using existing installation in %s", prefix.as_posix())
+            return
 
     cmd = list()
 
@@ -162,11 +163,12 @@ def install_client(
 
     is_empty = not any(prefix.iterdir())
 
-    if is_empty:
+    if not is_empty:
         if force_reinstall:
             empty_dir(prefix)
         else:
-            raise Exception(f"{prefix} is not empty")
+            _logger.info("Re-using existing installation in %s", prefix.as_posix())
+            return
 
     cmd = list()
 
