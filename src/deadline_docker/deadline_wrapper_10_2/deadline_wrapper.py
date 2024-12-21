@@ -72,7 +72,7 @@ def install_repository(
 
     installers_dir = pathlib.Path(
         INSTALLER_DIR.format(
-            installers_root=os.environ.get("INSTALLERS_ROOT"),
+            installers_root=os.environ["INSTALLERS_ROOT"],
             deadline_version=deadline_version,
         )
     )
@@ -150,7 +150,7 @@ def install_client(
 
     installers_dir = pathlib.Path(
         INSTALLER_DIR.format(
-            installers_root=os.environ.get("INSTALLERS_ROOT"),
+            installers_root=os.environ["INSTALLERS_ROOT"],
             deadline_version=deadline_version,
         )
     )
