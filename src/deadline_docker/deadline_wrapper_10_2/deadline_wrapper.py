@@ -438,6 +438,7 @@ def parse_args(args):
         "--arguments",
         dest="arguments",
         required=False,
+        default=[],
         nargs="+",
         help="extra arguments",
     )
