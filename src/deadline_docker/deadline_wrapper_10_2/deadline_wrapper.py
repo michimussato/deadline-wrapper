@@ -56,7 +56,7 @@ def empty_dir(
 
 
 def version_tuple(version: str) -> tuple:
-    return tuple(str(version).split("."))
+    return tuple(map(int, str(version).split(".")))
 
 
 def install_repository(
