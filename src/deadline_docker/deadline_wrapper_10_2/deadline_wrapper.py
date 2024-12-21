@@ -222,10 +222,10 @@ def runner(
     cmd = list()
     cmd.append(executable.as_posix())
 
-    cmd.extend(arguments)
-
     print(cmd)
     print(arguments)
+
+    cmd.extend(arguments)
 
     proc = subprocess.Popen(
         cmd,
