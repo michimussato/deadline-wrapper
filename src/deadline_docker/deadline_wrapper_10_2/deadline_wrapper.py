@@ -38,7 +38,7 @@ __license__ = "MIT"
 _logger = logging.getLogger(__name__)
 
 
-INSTALLER_DIR = "/nfs/installers/Deadline-{deadline_version}-linux-installers"
+INSTALLER_DIR = "{installers_root}/Deadline-{deadline_version}-linux-installers"
 
 
 # ---- Python API ----
@@ -70,7 +70,12 @@ def install_repository(
         force_reinstall: bool = False,
 ):
 
-    installers_dir = pathlib.Path(INSTALLER_DIR.format(deadline_version=deadline_version))
+    installers_dir = pathlib.Path(
+        INSTALLER_DIR.format(
+            installers_root=os.environ.get("INSTALLERS_ROOT"),
+            deadline_version=deadline_version,
+        )
+    )
 
     installer = installers_dir / f"DeadlineRepository-{deadline_version}-linux-x64-installer.run"
 
@@ -143,7 +148,12 @@ def install_client(
         force_reinstall: bool = False,
 ):
 
-    installers_dir = pathlib.Path(INSTALLER_DIR.format(deadline_version=deadline_version))
+    installers_dir = pathlib.Path(
+        INSTALLER_DIR.format(
+            installers_root=os.environ.get("INSTALLERS_ROOT"),
+            deadline_version=deadline_version,
+        )
+    )
 
     installer = installers_dir / f"DeadlineClient-{deadline_version}-linux-x64-installer.run"
 
@@ -219,6 +229,8 @@ def runner(
 ):
 
     assert executable.exists(), f"Executable {executable} does not exist"
+    # Todo:
+    #  - [ ] deadline.ini to .env
     deadline_ini = pathlib.Path("/var/lib/Thinkbox/Deadline10/deadline.ini")
     assert deadline_ini.exists(), f"{deadline_ini} does not exist"
 
