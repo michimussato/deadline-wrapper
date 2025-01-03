@@ -38,7 +38,7 @@ __license__ = "MIT"
 _logger = logging.getLogger(__name__)
 
 
-INSTALLER_DIR = "{installers_root}/Deadline-{deadline_version}-linux-installers"
+# INSTALLER_DIR = "{installers_root}/Deadline-{deadline_version}-linux-installers"
 
 
 # ---- Python API ----
@@ -61,6 +61,7 @@ def version_tuple(version: str) -> tuple:
 
 
 def install_repository(
+        installer: pathlib.Path,
         deadline_version: str,
         prefix: pathlib.Path,
         dbtype: str,
@@ -70,14 +71,14 @@ def install_repository(
         force_reinstall: bool = False,
 ):
 
-    installers_dir = pathlib.Path(
-        INSTALLER_DIR.format(
-            installers_root=os.environ["INSTALLERS_ROOT"],
-            deadline_version=deadline_version,
-        )
-    )
+    # installers_dir = pathlib.Path(
+    #     INSTALLER_DIR.format(
+    #         installers_root=os.environ["INSTALLERS_ROOT"],
+    #         deadline_version=deadline_version,
+    #     )
+    # )
 
-    installer = installers_dir / f"DeadlineRepository-{deadline_version}-linux-x64-installer.run"
+    # installer = installers_dir / f"DeadlineRepository-{deadline_version}-linux-x64-installer.run"
 
     assert installer.exists(), f"Installer {installer} does not exist"
     assert 8000 <= dbport <= 65535
@@ -139,6 +140,7 @@ def install_repository(
 
 
 def install_client(
+        installer: pathlib.Path,
         deadline_version: str,
         prefix: pathlib.Path,
         repositorydir: pathlib.Path,
@@ -148,14 +150,14 @@ def install_client(
         force_reinstall: bool = False,
 ):
 
-    installers_dir = pathlib.Path(
-        INSTALLER_DIR.format(
-            installers_root=os.environ["INSTALLERS_ROOT"],
-            deadline_version=deadline_version,
-        )
-    )
+    # installers_dir = pathlib.Path(
+    #     INSTALLER_DIR.format(
+    #         installers_root=os.environ["INSTALLERS_ROOT"],
+    #         deadline_version=deadline_version,
+    #     )
+    # )
 
-    installer = installers_dir / f"DeadlineClient-{deadline_version}-linux-x64-installer.run"
+    # installer = installers_dir / f"DeadlineClient-{deadline_version}-linux-x64-installer.run"
 
     assert installer.exists(), f"Installer {installer} does not exist"
     assert 8000 <= httpport <= 65535
@@ -313,6 +315,14 @@ def parse_args(args):
     )
 
     subparser_repository.add_argument(
+        "--installer",
+        dest="installer",
+        required=True,
+        type=pathlib.Path,
+        help="Deadline Installer",
+    )
+
+    subparser_repository.add_argument(
         "--deadline-version",
         dest="deadline_version",
         required=True,
@@ -380,6 +390,14 @@ def parse_args(args):
 
     subparser_client = subparsers.add_parser(
         "install-client",
+    )
+
+    subparser_client.add_argument(
+        "--installer",
+        dest="installer",
+        required=True,
+        type=pathlib.Path,
+        help="Deadline Installer",
     )
 
     subparser_client.add_argument(
@@ -512,6 +530,7 @@ def main(args):
 
     if args.sub_command == "install-client":
         install_client(
+            installer=args.installer,
             deadline_version=args.deadline_version,
             prefix=args.prefix,
             repositorydir=args.repositorydir,
@@ -522,6 +541,7 @@ def main(args):
 
     elif args.sub_command == "install-repository":
         install_repository(
+            installer=args.installer,
             deadline_version=args.deadline_version,
             prefix=args.prefix,
             dbtype=args.dbtype,
