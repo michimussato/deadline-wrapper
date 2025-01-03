@@ -83,14 +83,15 @@ def install_repository(
     if installer_log.exists():
         shutil.rmtree(installer_log, ignore_errors=True)
 
-    is_empty = not any(prefix.iterdir())
+    if prefix.exists():
+        is_empty = not any(prefix.iterdir())
 
-    if not is_empty:
-        if force_reinstall:
-            empty_dir(prefix)
-        else:
-            _logger.info("Re-using existing installation in %s", prefix.as_posix())
-            return
+        if not is_empty:
+            if force_reinstall:
+                empty_dir(prefix)
+            else:
+                _logger.info("Re-using existing installation in %s", prefix.as_posix())
+                return
 
     cmd = list()
 
@@ -157,14 +158,15 @@ def install_client(
     if installer_log.exists():
         shutil.rmtree(installer_log, ignore_errors=True)
 
-    is_empty = not any(prefix.iterdir())
+    if prefix.exists():
+        is_empty = not any(prefix.iterdir())
 
-    if not is_empty:
-        if force_reinstall:
-            empty_dir(prefix)
-        else:
-            _logger.info("Re-using existing installation in %s", prefix.as_posix())
-            return
+        if not is_empty:
+            if force_reinstall:
+                empty_dir(prefix)
+            else:
+                _logger.info("Re-using existing installation in %s", prefix.as_posix())
+                return
 
     cmd = list()
 
