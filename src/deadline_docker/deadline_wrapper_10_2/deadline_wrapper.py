@@ -71,15 +71,6 @@ def install_repository(
         force_reinstall: bool = False,
 ):
 
-    # installers_dir = pathlib.Path(
-    #     INSTALLER_DIR.format(
-    #         installers_root=os.environ["INSTALLERS_ROOT"],
-    #         deadline_version=deadline_version,
-    #     )
-    # )
-
-    # installer = installers_dir / f"DeadlineRepository-{deadline_version}-linux-x64-installer.run"
-
     assert installer.exists(), f"Installer {installer} does not exist"
     assert 8000 <= dbport <= 65535
     assert deadline_version in [
@@ -117,6 +108,8 @@ def install_repository(
     cmd.extend(["--installSecretsManagement", "false"])
     cmd.extend(["--importrepositorysettings", "false"])
 
+    _logger.info(f"{' '.join(cmd) = }")
+
     proc = subprocess.Popen(
         cmd,
         stdout=subprocess.PIPE,
@@ -149,15 +142,6 @@ def install_client(
         # binariesonly: bool,
         force_reinstall: bool = False,
 ):
-
-    # installers_dir = pathlib.Path(
-    #     INSTALLER_DIR.format(
-    #         installers_root=os.environ["INSTALLERS_ROOT"],
-    #         deadline_version=deadline_version,
-    #     )
-    # )
-
-    # installer = installers_dir / f"DeadlineClient-{deadline_version}-linux-x64-installer.run"
 
     assert installer.exists(), f"Installer {installer} does not exist"
     assert 8000 <= httpport <= 65535
@@ -202,6 +186,8 @@ def install_client(
     if (10, 4) <= version_tuple(deadline_version) <= (10, 5):
         # This is new in 10.4
         cmd.extend(["--remotecontrol", "NotBlocked"])
+
+    _logger.info(f"{' '.join(cmd) = }")
 
     proc = subprocess.Popen(
         cmd,
