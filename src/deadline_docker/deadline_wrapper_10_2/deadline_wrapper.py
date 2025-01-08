@@ -215,7 +215,8 @@ def install_client(
 
 def runner(
         executable: pathlib.Path,
-        arguments: str,
+        nogui: bool,
+        nosplash: bool,
 ):
 
     assert executable.exists(), f"Executable {executable} does not exist"
@@ -224,14 +225,12 @@ def runner(
     deadline_ini = pathlib.Path("/var/lib/Thinkbox/Deadline10/deadline.ini")
     assert deadline_ini.exists(), f"{deadline_ini} does not exist"
 
-    if bool(arguments):
-        arguments_list = ast.literal_eval(arguments)
-    else:
-        arguments_list = []
-
     cmd = list()
     cmd.append(executable.as_posix())
-    cmd.extend(arguments_list)
+    if nogui:
+        cmd.append("-nogui")
+    if nosplash:
+        cmd.append("-nosplash")
 
     proc = subprocess.Popen(
         cmd,
@@ -478,12 +477,27 @@ def parse_args(args):
         help="run executable",
     )
 
+    """
+    "--force-reinstall",
+    dest="force_reinstall",
+    action="store_true",
+    help="force deletion and then install",
+    """
+
     subparser_run.add_argument(
-        "--arguments",
-        dest="arguments",
+        "--nogui",
+        dest="nogui",
         required=False,
-        type=str,
-        default="",
+        action="store_true",
+        # nargs="+",
+        help="--nogui",
+    )
+
+    subparser_run.add_argument(
+        "--nosplash",
+        dest="nosplash",
+        required=False,
+        action="store_true",
         # nargs="+",
         help="extra arguments",
     )
@@ -542,7 +556,8 @@ def main(args):
     elif args.sub_command == "run":
         runner(
             executable=args.executable,
-            arguments=args.arguments,
+            nogui=args.nogui,
+            nosplash=args.nosplash,
         )
 
 
