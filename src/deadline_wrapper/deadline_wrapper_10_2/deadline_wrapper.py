@@ -29,7 +29,7 @@ import subprocess
 import shutil
 import ast
 
-from deadline_docker.deadline_wrapper_10_2 import __version__
+from deadline_wrapper.deadline_wrapper_10_2 import __version__
 
 __author__ = "Michael Mussato"
 __copyright__ = "Michael Mussato"
