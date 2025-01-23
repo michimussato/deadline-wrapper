@@ -44,6 +44,10 @@ _logger = logging.getLogger(__name__)
 # ---- Python API ----
 
 
+# Todo
+#  - [ ] Forward all output (stdout, stderr; install, run) to console for docker logging
+
+
 def empty_dir(
         path: pathlib.Path,
 ) -> pathlib.Path:
