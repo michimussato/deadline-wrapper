@@ -57,6 +57,7 @@ def empty_dir(
             shutil.rmtree(item.path)
         else:
             os.remove(item.path)
+        _logger.debug("%s removed" % item.path)
 
     return path
 
@@ -87,13 +88,16 @@ def install_repository(
 
     if installer_log.exists():
         shutil.rmtree(installer_log, ignore_errors=True)
+        _logger.debug("%s removed" % installer.as_posix())
 
     if prefix.exists():
         is_empty = not any(prefix.iterdir())
 
         if not is_empty:
             if force_reinstall:
+                _logger.debug("Forcing reinstall...")
                 empty_dir(prefix)
+
             else:
                 _logger.info("Re-using existing installation in %s", prefix.as_posix())
                 return
@@ -114,7 +118,10 @@ def install_repository(
     cmd.extend(["--installSecretsManagement", "false"])
     cmd.extend(["--importrepositorysettings", "false"])
 
-    _logger.info(f"{' '.join(cmd) = }")
+    # setup_logging(logging.DEBUG)
+
+    _logger.debug("cmd = %s" % " ".join(cmd))
+    print("cmd = %s" % " ".join(cmd))
 
     proc = subprocess.Popen(
         cmd,
@@ -124,19 +131,19 @@ def install_repository(
     )
 
     handles = (proc.stdout, proc.stderr)
-    labels = ("stdout", "stderr")
-    functions = (_logger.info, _logger.warning)
-    logs = iterate_fds(
+    functions = (_logger.debug, _logger.error)
+    iterate_fds_original(
         handles=handles,
-        labels=labels,
         functions=functions,
-        live_print=False,
-        do_print=True,
+        # live_print=True,
+        # do_print=True,
     )
 
-    for _label, _function in zip(labels, functions):
-        if bool(logs[_label]):
-            _function(logs[_label].decode("utf-8"))
+    print("here")
+
+    # for _label, _function in zip(labels, functions):
+    #     if bool(logs[_label]):
+    #         _function(logs[_label].decode("utf-8"))
 
     # stdout, stderr = proc.communicate()
     #
@@ -147,8 +154,8 @@ def install_repository(
     # If the filename is included in the destination path (relative or absolute) shutil will overwrite.
     shutil.move(installer_log, prefix / "installbuilder_installer.log")
 
-    with open(prefix / "installbuilder_installer.log", "r") as fo:
-        _logger.info(fo.read())
+    # with open(prefix / "installbuilder_installer.log", "r") as fo:
+    #     _logger.info(fo.read())
 
     return installer_log
 
@@ -561,10 +568,18 @@ def setup_logging(loglevel):
     Args:
       loglevel (int): minimum loglevel for emitting messages
     """
+
+    # handler = logging.StreamHandler(sys.stdout)
+    # handler.setLevel(loglevel)
+    # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    # handler.setFormatter(logformat)
     logformat = "[%(asctime)s] %(levelname)s:%(name)s:%(message)s"
+    # logformatter = logging.Formatter(logformat)
     logging.basicConfig(
         level=loglevel, stream=sys.stdout, format=logformat, datefmt="%Y-%m-%d %H:%M:%S"
     )
+    # handler.setFormatter(logformatter)
+    # _logger.addHandler(handler)
 
 
 def main(args):
@@ -628,6 +643,6 @@ if __name__ == "__main__":
     # After installing your project with pip, users can also run your Python
     # modules as scripts via the ``-m`` flag, as defined in PEP 338::
     #
-    #     python -m deadline_wrapper.skeleton 42
+    #     python -m deadline_wrapper.deadline_wrapper_10_2.deadline_wrapper --help
     #
     run()
