@@ -27,7 +27,8 @@ import sys
 import pathlib
 import subprocess
 import shutil
-import ast
+
+from dagster.dagster_shared.shared.helpers import *
 
 from deadline_wrapper.deadline_wrapper_10_2 import __version__
 
@@ -122,10 +123,25 @@ def install_repository(
         # cwd=prefix.as_posix(),
     )
 
-    stdout, stderr = proc.communicate()
+    handles = (proc.stdout, proc.stderr)
+    labels = ("stdout", "stderr")
+    functions = (_logger.info, _logger.warning)
+    logs = iterate_fds(
+        handles=handles,
+        labels=labels,
+        functions=functions,
+        live_print=False,
+        do_print=True,
+    )
 
-    _logger.info(stdout.decode("utf-8"))
-    _logger.error(stderr.decode("utf-8"))
+    for _label, _function in zip(labels, functions):
+        if bool(logs[_label]):
+            _function(logs[_label].decode("utf-8"))
+
+    # stdout, stderr = proc.communicate()
+    #
+    # _logger.info(stdout.decode("utf-8"))
+    # _logger.error(stderr.decode("utf-8"))
 
     # shutil.Error: Destination path '/opt/Thinkbox/DeadlineRepository10/installbuilder_installer.log' already exists
     # If the filename is included in the destination path (relative or absolute) shutil will overwrite.
@@ -202,10 +218,25 @@ def install_client(
         # cwd=prefix.as_posix(),
     )
 
-    stdout, stderr = proc.communicate()
+    handles = (proc.stdout, proc.stderr)
+    labels = ("stdout", "stderr")
+    functions = (_logger.info, _logger.warning)
+    logs = iterate_fds(
+        handles=handles,
+        labels=labels,
+        functions=functions,
+        live_print=False,
+        do_print=True,
+    )
 
-    _logger.info(stdout.decode("utf-8"))
-    _logger.error(stderr.decode("utf-8"))
+    for _label, _function in zip(labels, functions):
+        if bool(logs[_label]):
+            _function(logs[_label].decode("utf-8"))
+
+    # stdout, stderr = proc.communicate()
+    #
+    # _logger.info(stdout.decode("utf-8"))
+    # _logger.error(stderr.decode("utf-8"))
 
     # shutil.Error: Destination path '/opt/Thinkbox/DeadlineRepository10/installbuilder_installer.log' already exists
     # If the filename is included in the destination path (relative or absolute) shutil will overwrite.
@@ -243,10 +274,25 @@ def runner(
         # cwd=prefix.as_posix(),
     )
 
-    stdout, stderr = proc.communicate()
+    handles = (proc.stdout, proc.stderr)
+    labels = ("stdout", "stderr")
+    functions = (_logger.info, _logger.warning)
+    logs = iterate_fds(
+        handles=handles,
+        labels=labels,
+        functions=functions,
+        live_print=False,
+        do_print=True,
+    )
 
-    _logger.info(stdout.decode("utf-8"))
-    _logger.error(stderr.decode("utf-8"))
+    for _label, _function in zip(labels, functions):
+        if bool(logs[_label]):
+            _function(logs[_label].decode("utf-8"))
+
+    # stdout, stderr = proc.communicate()
+    #
+    # _logger.info(stdout.decode("utf-8"))
+    # _logger.error(stderr.decode("utf-8"))
 
 
 # ---- CLI ----
