@@ -118,8 +118,6 @@ def install_repository(
     cmd.extend(["--installSecretsManagement", "false"])
     cmd.extend(["--importrepositorysettings", "false"])
 
-    # setup_logging(logging.DEBUG)
-
     _logger.debug("cmd = %s" % " ".join(cmd))
     print("cmd = %s" % " ".join(cmd))
 
@@ -135,20 +133,9 @@ def install_repository(
     iterate_fds_original(
         handles=handles,
         functions=functions,
-        # live_print=True,
-        # do_print=True,
     )
 
     print("here")
-
-    # for _label, _function in zip(labels, functions):
-    #     if bool(logs[_label]):
-    #         _function(logs[_label].decode("utf-8"))
-
-    # stdout, stderr = proc.communicate()
-    #
-    # _logger.info(stdout.decode("utf-8"))
-    # _logger.error(stderr.decode("utf-8"))
 
     # shutil.Error: Destination path '/opt/Thinkbox/DeadlineRepository10/installbuilder_installer.log' already exists
     # If the filename is included in the destination path (relative or absolute) shutil will overwrite.
@@ -226,19 +213,15 @@ def install_client(
     )
 
     handles = (proc.stdout, proc.stderr)
-    labels = ("stdout", "stderr")
-    functions = (_logger.info, _logger.warning)
-    logs = iterate_fds(
+    functions = (_logger.debug, _logger.error)
+    iterate_fds_original(
         handles=handles,
-        labels=labels,
         functions=functions,
-        live_print=False,
-        do_print=True,
     )
 
-    for _label, _function in zip(labels, functions):
-        if bool(logs[_label]):
-            _function(logs[_label].decode("utf-8"))
+    # for _label, _function in zip(labels, functions):
+    #     if bool(logs[_label]):
+    #         _function(logs[_label].decode("utf-8"))
 
     # stdout, stderr = proc.communicate()
     #
@@ -249,8 +232,8 @@ def install_client(
     # If the filename is included in the destination path (relative or absolute) shutil will overwrite.
     shutil.move(installer_log, prefix / "installbuilder_installer.log")
 
-    with open(prefix / "installbuilder_installer.log", "r") as fo:
-        _logger.info(fo.read())
+    # with open(prefix / "installbuilder_installer.log", "r") as fo:
+    #     _logger.info(fo.read())
 
     return installer_log
 
@@ -282,19 +265,15 @@ def runner(
     )
 
     handles = (proc.stdout, proc.stderr)
-    labels = ("stdout", "stderr")
-    functions = (_logger.info, _logger.warning)
-    logs = iterate_fds(
+    functions = (_logger.debug, _logger.error)
+    iterate_fds_original(
         handles=handles,
-        labels=labels,
         functions=functions,
-        live_print=False,
-        do_print=True,
     )
 
-    for _label, _function in zip(labels, functions):
-        if bool(logs[_label]):
-            _function(logs[_label].decode("utf-8"))
+    # for _label, _function in zip(labels, functions):
+    #     if bool(logs[_label]):
+    #         _function(logs[_label].decode("utf-8"))
 
     # stdout, stderr = proc.communicate()
     #
