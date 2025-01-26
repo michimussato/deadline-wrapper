@@ -128,8 +128,13 @@ def install_repository(
         # cwd=prefix.as_posix(),
     )
 
+    # Todo:
+    #  - [ ] Something like:
+    #        if proc.returncode:
+    #            raise Exception("bla")
+
     handles = (proc.stdout, proc.stderr)
-    functions = (_logger.debug, _logger.error)
+    functions = (_logger.info, _logger.error)
     iterate_fds_original(
         handles=handles,
         functions=functions,
@@ -213,7 +218,7 @@ def install_client(
     )
 
     handles = (proc.stdout, proc.stderr)
-    functions = (_logger.debug, _logger.error)
+    functions = (_logger.info, _logger.error)
     iterate_fds_original(
         handles=handles,
         functions=functions,
@@ -265,7 +270,7 @@ def runner(
     )
 
     handles = (proc.stdout, proc.stderr)
-    functions = (_logger.debug, _logger.error)
+    functions = (_logger.info, _logger.error)
     iterate_fds_original(
         handles=handles,
         functions=functions,
